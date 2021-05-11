@@ -1,7 +1,10 @@
 package com.example.simplegallery
 
+import android.accounts.Account
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.GridView
@@ -20,6 +23,8 @@ import android.os.Environment
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.api.services.drive.Drive
 import java.io.File
 
 
@@ -37,15 +42,25 @@ class GalleryActivity : AppCompatActivity() {
     var currentDialog : Dialog? = null
     var tempCameraImageHolder : String? = null
 
+    var driveService : Drive? = null
+    var googleSignInClient : GoogleSignInClient? = null
+    var account : Account? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
+
+        driveService = DriveSingleton.mDriveService
+        googleSignInClient = DriveSingleton.mGoogleSignInClient
+        account = DriveSingleton.obtainedAccount
+
+        account_name.setText(account?.name)
         mConstans = ConstantsDefine()
         floatingActionButton = findViewById(R.id.floating_action_but_next)
         floatingActionButton?.setImageResource(R.drawable.ic_navigate_next_black_24dp)
         floatingActionButtonRefresh = findViewById(R.id.reset_multiple_floating_button)
         floatingActionButtonRefresh?.setImageResource(R.drawable.ic_refresh_black_24dp)
-        gridView = findViewById(R.id.grid_view)
+        gridView = findViewById<GridView>(R.id.grid_view)
         mHandler = object : Handler(this.mainLooper){
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
@@ -85,6 +100,7 @@ class GalleryActivity : AppCompatActivity() {
                         currentDialog = null
                     }
                     currentDialog = dialogBuilder.show()
+                    currentDialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 }
                 R.id.service -> {}
                 R.id.info -> {}
@@ -209,6 +225,27 @@ class GalleryActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onBackPressed() {
+        val dialogBuilder = AlertDialog.Builder(this)
+        val view = View.inflate(this, R.layout.camera_confirmation_dialog, null)
+        dialogBuilder.setView(view)
+        view.findViewById<TextView>(R.id.message).setText("Do you want to log out ?")
+        view.findViewById<TextView>(R.id.ok_button).setOnClickListener{
+            googleSignInClient?.signOut()
+            currentDialog?.dismiss()
+            currentDialog = null
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        view.findViewById<TextView>(R.id.cancel).setOnClickListener {
+            currentDialog?.dismiss()
+            currentDialog = null
+        }
+        currentDialog = dialogBuilder.show()
+        currentDialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     fun resetChosenImage(){

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignInActivity"
+    tools:context=".SignInActivity2"
     android:gravity="bottom"
     android:orientation="vertical"
     android:background="#4F8BF5">
@@ -62,8 +62,9 @@
                     android:id="@+id/sign_in_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rect_bottom_nav_little"
+                    android:background="#1167b1"
                     android:padding="8dp"
+                    android:ellipsize="end"
                     android:paddingStart="40dp"
                     android:paddingEnd="40dp"
                     android:text="Sign-in"
@@ -72,6 +73,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
