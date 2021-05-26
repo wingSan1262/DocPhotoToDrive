@@ -35,7 +35,7 @@ Always sign in First, just like any other app that use integrated google sign in
 
 <body>
   <img src="Screenshot_2021-05-10-17-00-27-098_com.example.simplegallery.png" width="200">
-<img src="Screenshot_2021-05-10-17-15-33-622_com.example.simplegallery.png" width="200">
+<img src="Screenshot_2021-05-12-06-43-57-105_com.example.simplegallery.png" width="200">
   <img src="Screenshot_2021-05-10-17-15-41-777_com.google.android.gms.png" width="200">
   
   </body>
